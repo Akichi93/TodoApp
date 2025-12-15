@@ -10,8 +10,8 @@ const initialState: NotificationState = {
 
 export const fetchNotifications = createAsyncThunk(
   'notifications/fetchNotifications',
-  async (userId: string) => {
-    return await notificationService.getNotifications(userId);
+  async () => {
+    return await notificationService.getNotifications();
   }
 );
 
@@ -25,8 +25,8 @@ export const markNotificationAsRead = createAsyncThunk(
 
 export const markAllNotificationsAsRead = createAsyncThunk(
   'notifications/markAllAsRead',
-  async (userId: string) => {
-    await notificationService.markAllAsRead(userId);
+  async () => {
+    await notificationService.markAllAsRead();
   }
 );
 

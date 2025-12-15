@@ -9,7 +9,7 @@ RUN apt-get update -y \
 
 # Install dependencies
 COPY package.json package-lock.json* ./
-RUN npm ci --silent
+RUN npm ci
 
 # Copy source and build
 COPY . .

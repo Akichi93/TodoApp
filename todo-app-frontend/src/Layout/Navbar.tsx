@@ -6,7 +6,7 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: ROUTES.DASHBOARD, label: 'Dashboard' },
+    { path: ROUTES.DASHBOARD, label: 'Tableau de bord' },
     { path: ROUTES.TODOS, label: 'Mes Tâches' },
     { path: ROUTES.PROFILE, label: 'Profil' },
   ];

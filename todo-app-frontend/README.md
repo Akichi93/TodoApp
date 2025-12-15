@@ -103,7 +103,7 @@ L'application inclut des utilisateurs de test :
 
 ## 🎯 Routes
 
-- `/` - Redirige vers Dashboard
+- `/` - Redirige vers le tableau de bord
 - `/login` - Page de connexion
 - `/register` - Page d'inscription
 - `/dashboard` - Tableau de bord

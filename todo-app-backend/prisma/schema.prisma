@@ -20,6 +20,7 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   tasks        Task[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -40,4 +41,18 @@ model Task {
   @@index([completed])
   @@index([dueDate])
   @@map("tasks")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String   @db.Text
+  meta      Json?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("notifications")
 }

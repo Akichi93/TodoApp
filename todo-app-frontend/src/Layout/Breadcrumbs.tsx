@@ -13,7 +13,7 @@ export const Breadcrumbs: React.FC = () => {
       let label = path;
 
       // Map paths to labels
-      if (path === 'dashboard') label = 'Dashboard';
+      if (path === 'dashboard') label = 'Tableau de Bord';
       else if (path === 'todos') label = 'Mes Tâches';
       else if (path === 'login') label = 'Connexion';
       else if (path === 'register') label = 'Inscription';
