@@ -9,20 +9,28 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    networks:
+      - app-network
 
   redis:
     image: redis:7
     ports:
       - '6379:6379'
+    networks:
+      - app-network
 
   rabbitmq:
     image: rabbitmq:3-management
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-network
 
   backend:
-    build: .
+    build:
+      context: ./todo-app-backend
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/postgres?schema=public"
       PORT: 4000
@@ -35,7 +43,6 @@ services:
     depends_on:
       - db
       - redis
-    # Expose backend to other services (network alias: backend)
     networks:
       - app-network
     healthcheck:
@@ -46,10 +53,10 @@ services:
 
   frontend:
     build:
-      context: ../todo-app-frontend
+      context: todo-app-frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_BASE_URL=http://backend:4000
+        - VITE_API_BASE_URL=http://localhost:4000
     ports:
       - '3000:80'
     networks:

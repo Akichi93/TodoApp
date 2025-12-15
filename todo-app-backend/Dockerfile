@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # Install OpenSSL (required by Prisma native engines)
 RUN apt-get update -y \
-	&& apt-get install -y --no-install-recommends openssl libssl-dev ca-certificates \
+	&& apt-get install -y --no-install-recommends openssl libssl-dev ca-certificates curl \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
@@ -38,6 +38,6 @@ ENV NODE_ENV=production
 ENV PORT=4000
 EXPOSE 4000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s CMD curl -f http://localhost:${PORT}/ || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s CMD curl -f http://localhost:${PORT}/api || exit 1
 
 CMD ["./docker-entrypoint.sh"]
