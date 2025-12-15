@@ -11,4 +11,3 @@ export class HashUtil {
     return bcrypt.compare(plainText, hash);
   }
 }
-

@@ -40,7 +40,10 @@ export class TasksController {
     description: 'Tâche créée avec succès',
   })
   @ApiResponse({ status: 401, description: 'Non autorisé' })
-  create(@CurrentUser() user: { id: string }, @Body() createTaskDto: CreateTaskDto) {
+  create(
+    @CurrentUser() user: { id: string },
+    @Body() createTaskDto: CreateTaskDto,
+  ) {
     return this.tasksService.create(user.id, createTaskDto);
   }
 
@@ -48,8 +51,8 @@ export class TasksController {
   @ApiOperation({
     summary: 'Obtenir mes tâches',
     description:
-      'Récupère la liste paginée des tâches de l\'utilisateur connecté avec des filtres avancés. ' +
-      'Supporte la recherche, le filtrage par statut, priorité et dates d\'échéance.',
+      "Récupère la liste paginée des tâches de l'utilisateur connecté avec des filtres avancés. " +
+      "Supporte la recherche, le filtrage par statut, priorité et dates d'échéance.",
   })
   @ApiResponse({
     status: 200,
@@ -92,7 +95,7 @@ export class TasksController {
     name: 'limit',
     required: false,
     type: Number,
-    description: 'Nombre d\'éléments par page (défaut: 10, max: 100)',
+    description: "Nombre d'éléments par page (défaut: 10, max: 100)",
     example: 10,
   })
   @ApiQuery({
@@ -113,14 +116,14 @@ export class TasksController {
     name: 'dueDateFrom',
     required: false,
     type: String,
-    description: 'Date de début pour l\'échéance (ISO 8601)',
+    description: "Date de début pour l'échéance (ISO 8601)",
     example: '2024-01-01T00:00:00Z',
   })
   @ApiQuery({
     name: 'dueDateTo',
     required: false,
     type: String,
-    description: 'Date de fin pour l\'échéance (ISO 8601)',
+    description: "Date de fin pour l'échéance (ISO 8601)",
     example: '2024-12-31T23:59:59Z',
   })
   @ApiQuery({
@@ -178,4 +181,3 @@ export class TasksController {
     return this.tasksService.remove(id, user.id);
   }
 }
-

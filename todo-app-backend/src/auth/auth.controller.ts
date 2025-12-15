@@ -30,7 +30,8 @@ export class AuthController {
   @Post('register')
   @ApiOperation({
     summary: "S'inscrire",
-    description: "Crée un nouveau compte utilisateur et retourne les tokens d'authentification",
+    description:
+      "Crée un nouveau compte utilisateur et retourne les tokens d'authentification",
   })
   @ApiResponse({
     status: 201,
@@ -64,7 +65,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Se connecter',
-    description: 'Authentifie un utilisateur et retourne les tokens JWT (access token et refresh token)',
+    description:
+      'Authentifie un utilisateur et retourne les tokens JWT (access token et refresh token)',
   })
   @ApiResponse({
     status: 200,
@@ -97,13 +99,16 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
-  @ApiOperation({ summary: 'Rafraîchir le token d\'accès' })
+  @ApiOperation({ summary: "Rafraîchir le token d'accès" })
   @ApiResponse({
     status: 200,
     description: 'Nouveaux tokens générés avec succès',
   })
   @ApiResponse({ status: 401, description: 'Refresh token invalide' })
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto, @CurrentUser() user: any) {
+  async refresh(
+    @Body() refreshTokenDto: RefreshTokenDto,
+    @CurrentUser() user: any,
+  ) {
     return this.authService.refreshTokens(refreshTokenDto.refreshToken);
   }
 
@@ -122,4 +127,3 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 }
-

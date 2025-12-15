@@ -34,7 +34,7 @@ export class UpdateTaskDto {
   completed?: boolean;
 
   @ApiPropertyOptional({
-    description: 'Date d\'échéance (ISO 8601)',
+    description: "Date d'échéance (ISO 8601)",
     example: '2024-12-31T23:59:59Z',
   })
   @IsDateString()
@@ -50,4 +50,3 @@ export class UpdateTaskDto {
   @IsOptional()
   priority?: string;
 }
-

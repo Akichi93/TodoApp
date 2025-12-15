@@ -2,35 +2,66 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskQueryDto } from './dto/task-query.dto';
-import { PaginationUtil, PaginationResult } from '../common/utils/pagination.util';
+import {
+  PaginationUtil,
+  PaginationResult,
+} from '../common/utils/pagination.util';
 import { CACHE_KEYS, CACHE_TTL } from '../common/constants';
 import { RedisService } from '../redis/redis.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Task } from '@prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
+import { Inject, forwardRef } from '@nestjs/common';
 
 @Injectable()
 export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
   constructor(
     private prisma: PrismaService,
     private redis: RedisService,
-  ) {}
+    @Inject(forwardRef(() => NotificationsService))
+    private notificationsService: NotificationsService,
+  ) { }
 
   async create(userId: string, createTaskDto: CreateTaskDto) {
     const task = await this.prisma.task.create({
       data: {
         ...createTaskDto,
-        dueDate: createTaskDto.dueDate
-          ? new Date(createTaskDto.dueDate)
-          : null,
+        dueDate: createTaskDto.dueDate ? new Date(createTaskDto.dueDate) : null,
         userId,
+      },
+      include: {
+        user: true,
       },
     });
 
     await this.invalidateUserTasksCache(userId);
+
+    const now = new Date();
+    this.logger.log(
+      `Task created: ${task.id}. DueDate: ${task.dueDate ? task.dueDate.toISOString() : 'N/A'
+      }, Now: ${now.toISOString()}, Diff: ${task.dueDate ? task.dueDate.getTime() - now.getTime() : 'N/A'
+      }`,
+    );
+
+    if (task.dueDate && task.dueDate < now && !task.completed) {
+      await this.notificationsService.sendNotification({
+        taskId: task.id,
+        taskTitle: task.title,
+        dueDate: task.dueDate,
+        userId: task.userId,
+        user: {
+          email: task.user.email,
+          firstName: task.user.firstName ?? undefined,
+        },
+      });
+    }
 
     return task;
   }
@@ -48,7 +79,7 @@ export class TasksService {
     const cached = await this.redis.get(cacheKey);
 
     if (cached) {
-      return JSON.parse(cached);
+      return JSON.parse(cached) as PaginationResult<any>;
     }
 
     const where = this.buildWhereClause(userId, query);
@@ -65,17 +96,21 @@ export class TasksService {
     ]);
 
     const result = PaginationUtil.create(tasks, total, { page, limit });
-    await this.redis.set(cacheKey, JSON.stringify(result), CACHE_TTL.TASKS_LIST);
+    await this.redis.set(
+      cacheKey,
+      JSON.stringify(result),
+      CACHE_TTL.TASKS_LIST,
+    );
 
     return result;
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string, userId: string): Promise<Task> {
     const cacheKey = `${CACHE_KEYS.TASK_PREFIX}${id}`;
     const cached = await this.redis.get(cacheKey);
 
     if (cached) {
-      const task = JSON.parse(cached);
+      const task = JSON.parse(cached) as Task;
       if (task.userId === userId) {
         return task;
       }
@@ -100,7 +135,7 @@ export class TasksService {
   }
 
   async update(id: string, userId: string, updateTaskDto: UpdateTaskDto) {
-    const task = await this.findOne(id, userId);
+    await this.findOne(id, userId);
 
     const updatedTask = await this.prisma.task.update({
       where: { id },
@@ -129,7 +164,7 @@ export class TasksService {
     await this.invalidateUserTasksCache(userId);
   }
 
-  async findOverdueTasks(): Promise<any[]> {
+  async findOverdueTasks() {
     const now = new Date();
 
     return this.prisma.task.findMany({
@@ -152,7 +187,10 @@ export class TasksService {
     });
   }
 
-  private buildWhereClause(userId: string, query: TaskQueryDto): Prisma.TaskWhereInput {
+  private buildWhereClause(
+    userId: string,
+    query: TaskQueryDto,
+  ): Prisma.TaskWhereInput {
     const where: Prisma.TaskWhereInput = {
       userId,
     };
@@ -202,4 +240,3 @@ export class TasksService {
     }
   }
 }
-

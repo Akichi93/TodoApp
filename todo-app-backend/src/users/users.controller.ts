@@ -48,7 +48,8 @@ export class UsersController {
   @ApiTags('Profile', 'Users')
   @ApiOperation({
     summary: 'Obtenir mon profil',
-    description: 'Récupère les informations du profil de l\'utilisateur actuellement connecté',
+    description:
+      "Récupère les informations du profil de l'utilisateur actuellement connecté",
   })
   @ApiResponse({
     status: 200,
@@ -76,7 +77,8 @@ export class UsersController {
   @ApiTags('Profile', 'Users')
   @ApiOperation({
     summary: 'Mettre à jour mon profil',
-    description: 'Met à jour les informations du profil de l\'utilisateur connecté. Tous les champs sont optionnels.',
+    description:
+      "Met à jour les informations du profil de l'utilisateur connecté. Tous les champs sont optionnels.",
   })
   @ApiResponse({
     status: 200,
@@ -98,7 +100,7 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Token manquant ou invalide' })
   @ApiResponse({
     status: 409,
-    description: 'L\'email fourni est déjà utilisé par un autre compte',
+    description: "L'email fourni est déjà utilisé par un autre compte",
   })
   updateProfile(
     @CurrentUser() user: { id: string },
@@ -108,7 +110,9 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Obtenir la liste des utilisateurs avec pagination' })
+  @ApiOperation({
+    summary: 'Obtenir la liste des utilisateurs avec pagination',
+  })
   @ApiResponse({
     status: 200,
     description: 'Liste des utilisateurs récupérée avec succès',
@@ -159,4 +163,3 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 }
-

@@ -7,7 +7,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserQueryDto } from './dto/user-query.dto';
-import { PaginationUtil, PaginationResult } from '../common/utils/pagination.util';
+import {
+  PaginationUtil,
+  PaginationResult,
+} from '../common/utils/pagination.util';
 import { HashUtil } from '../common/utils/hash.util';
 import { CACHE_KEYS, CACHE_TTL } from '../common/constants';
 import { RedisService } from '../redis/redis.service';
@@ -196,4 +199,3 @@ export class UsersService {
     await this.redis.del(`${CACHE_KEYS.USER_PREFIX}${userId}`);
   }
 }
-

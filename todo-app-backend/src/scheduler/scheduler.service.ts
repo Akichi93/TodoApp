@@ -18,4 +18,3 @@ export class SchedulerService implements OnModuleInit {
     await this.notificationsService.checkOverdueTasks();
   }
 }
-

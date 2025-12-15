@@ -32,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           'An error occurred';
         errors = (exceptionResponse as any).errors || null;
       } else {
-        message = exceptionResponse as string;
+        message = exceptionResponse;
       }
     } else if (exception instanceof Error) {
       message = exception.message;
@@ -52,4 +52,3 @@ export class HttpExceptionFilter implements ExceptionFilter {
     });
   }
 }
-

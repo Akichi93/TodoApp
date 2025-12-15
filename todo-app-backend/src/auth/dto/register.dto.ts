@@ -42,4 +42,3 @@ export class RegisterDto {
   @IsOptional()
   lastName?: string;
 }
-

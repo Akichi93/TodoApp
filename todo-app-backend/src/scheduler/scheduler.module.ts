@@ -8,4 +8,3 @@ import { NotificationsModule } from '../notifications/notifications.module';
   providers: [SchedulerService],
 })
 export class SchedulerModule {}
-

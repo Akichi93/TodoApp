@@ -24,7 +24,7 @@ export class TaskQueryDto {
   page?: number = 1;
 
   @ApiPropertyOptional({
-    description: 'Nombre d\'éléments par page',
+    description: "Nombre d'éléments par page",
     example: 10,
     minimum: 1,
     maximum: 100,
@@ -55,7 +55,7 @@ export class TaskQueryDto {
   priority?: string;
 
   @ApiPropertyOptional({
-    description: 'Date de début pour l\'échéance (ISO 8601)',
+    description: "Date de début pour l'échéance (ISO 8601)",
     example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
@@ -63,7 +63,7 @@ export class TaskQueryDto {
   dueDateFrom?: string;
 
   @ApiPropertyOptional({
-    description: 'Date de fin pour l\'échéance (ISO 8601)',
+    description: "Date de fin pour l'échéance (ISO 8601)",
     example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
@@ -77,4 +77,3 @@ export class TaskQueryDto {
   @IsOptional()
   search?: string;
 }
-

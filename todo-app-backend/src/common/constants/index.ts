@@ -31,4 +31,3 @@ export const ERROR_MESSAGES = {
   VALIDATION_ERROR: 'Validation failed',
   INTERNAL_ERROR: 'Internal server error',
 };
-

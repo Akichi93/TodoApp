@@ -47,4 +47,3 @@ export class PaginationUtil {
     return (options.page - 1) * options.limit;
   }
 }
-
